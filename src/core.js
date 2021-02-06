@@ -6,6 +6,12 @@
   var hasOwn = Object.prototype.hasOwnProperty;
   var INDEXES_PATH_RE = /\[(\w+)\]/g;
 
+  var disallowProtoPath = function (path, target) {
+    if (target[path] === Object.prototype) {
+      throw new Error("Unsafe path override encountered: " + path);
+    }
+  }
+
   nx.noop = function () {};
 
   nx.stubTrue = function () {
@@ -123,6 +129,7 @@
     for (var i = 0; i < len_; i++) {
       var path = paths[i];
       var target = isNaN(+paths[i + 1]) ? {} : [];
+      disallowProtoPath(path, result);
       result = result[path] = result[path] || target;
     }
     result[last] = inValue;
