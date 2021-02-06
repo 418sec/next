@@ -43,4 +43,11 @@ describe('nx.set name/path', () => {
     nx.set(qux, 'a.[0].b.[1]', 2);
     expect(qux).toEqual({ a: [{ b: [1, 2] }] });
   });
+
+  test.only('nx.set throw when protopath override', () => {
+    var qux = {};
+    expect(() => nx.set(qux, '__proto__.polluted', 1)).toThrow();
+    expect(() => nx.set(Object, 'prototype.polluted', 1)).toThrow();
+    expect(() => nx.set(qux, 'constructor.prototype.polluted', 2)).toThrow();
+  });
 });
